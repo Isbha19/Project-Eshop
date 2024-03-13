@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'EshopLive'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3B772938FA07471EBDABFEE587981E03 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2173CBBC354645A4B3C13AF725B09A4C }}
           package: .
