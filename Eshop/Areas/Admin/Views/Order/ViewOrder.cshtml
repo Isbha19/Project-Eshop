@@ -1,0 +1,147 @@
+﻿
+@model OrderHeader
+
+<section id="main-content">
+    <section class="wrapper">
+        <div class="table-agile-info">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+
+                    <div class="col-md-6 text-left">
+                        Order Details
+                    </div>
+                 
+
+
+                </div>
+                <div>
+                    <table class="table" ui-jq="footable" ui-options='{
+        "paging": {
+          "enabled": true
+        },
+        "filtering": {
+          "enabled": true
+        },
+        "sorting": {
+          "enabled": true
+        }}'>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Product Count</th>
+                                <th>Product Price</th>
+                                <th>Product Status</th>
+                                <th>Product Payment Status</th>
+
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.orderDetails)
+                            {
+                                <tr data-expanded="true">
+                                    <td class="col-md-2">@item.products.ProductName</td>
+                                    <td>@item.Count</td>
+                                    <td>@item.Price</td>
+                                    
+                                    <td>
+                                            @{
+                                                if (item.ProductStatus != SD.statusCancelled && item.ProductStatus != SD.statusDelivered && !item.IsReturned)
+                                                {
+
+                                                <select asp-for="@item.ProductStatus" class="form-control" id="orderStatus_@item.Id">
+
+                                                    <option value=@SD.statusProcessing>@SD.statusProcessing</option>
+                                                    <option value=@SD.statusShipped>@SD.statusShipped</option>
+                                                    <option value=@SD.statusDelivered>@SD.statusDelivered</option>
+                                                </select>
+
+                                                }
+                                                else if (item.ProductStatus == SD.statusCancelled && !item.IsReturned)
+                                                {
+                                                <span class="text-muted">Cancelled</span>
+                                                }
+                                                else if (item.ProductStatus == SD.statusDelivered)
+                                                {
+                                                <span class="text-muted">Product Delivered!</span>
+                                            }
+                                            else if (item.IsReturned)
+                                            {
+                                                <span class="text-muted">Product Returned</span>
+                                            }
+
+                                            }
+                                    </td>
+                                  <td>@item.ProductPaymentStatus</td>
+                                    <td>
+                                        @{
+                                            if (item.ProductStatus != SD.statusDelivered && item.ProductStatus!=SD.statusCancelled && !item.IsReturned)
+                                            {
+                                                <div role="group">
+                                                    <a class="btn btn-primary" asp-area="Admin" asp-controller="Order" asp-action="CancelSingleOrder" asp-route-id="@item.Id">Cancel Product</a>
+                                                </div>
+                                            }
+                                            else if (item.ProductStatus == SD.statusDelivered)
+                                            {
+                                                <span class="text-muted">delivered</span>
+
+                                            }
+                                            else if (item.ProductStatus == SD.statusCancelled)
+                                            {
+                                                <span class="text-muted">Cancelled</span>
+
+                                            }else if (item.IsReturned)
+                                            {
+                                                <span class="text-muted">Product Returned</span>
+
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- footer -->
+    <div class="footer">
+        <div class="wthree-copyright">
+            <p>© 2017 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+        </div>
+    </div>
+    <!-- / footer -->
+</section>
+
+<!--main content end-->
+    </section>
+<script>
+    $(document).ready(function () {
+        console.log("Dropdown change event triggered");
+        // Event listener for change in dropdown selection
+        $("select[id^='orderStatus_']").change(function () {
+            var orderId = $(this).attr('id').replace('orderStatus_', ''); // Extract orderId from id attribute
+            var newStatus = $(this).val(); // Get the new status from the selected option
+
+            // AJAX request to update the status
+            $.ajax({
+                url: '@Url.Action("UpdateProductStatus", "Order", new { area = "Admin" })',
+                type: 'POST',
+                data: { Id: orderId, newStatus: newStatus },
+                success: function (response) {
+                    console.log(response);
+                    // Optionally update UI if needed
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+
+
+
+</script>

@@ -1,0 +1,203 @@
+﻿@model List<OrderHeader>
+
+<style>
+    .order {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .NoOrder {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .order-details {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+        .order-details img {
+            max-width: 100px;
+            max-height: 100px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+
+        .order-details h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+    .cancel-button {
+        display: block;
+        width: 70%;
+        padding: 10px;
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        font-size: 13px;
+        margin: 0 auto;
+    }
+
+   
+
+    .status {
+        font-weight: bold;
+     
+        margin-top: 20px;
+    }
+
+    .no-orders {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .no-orders h1 {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .no-orders img {
+            max-width: 400px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .no-orders a {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            text-align: center;
+        }
+</style>
+
+@if (Model.Any())
+{
+    <h1 class="NoOrder">Your Orders</h1>
+    @foreach (var order in Model)
+    {
+        <div class="order">
+            @foreach (var detail in order.orderDetails)
+            {
+                if (detail.ProductStatus != null)
+                {
+                    <div class="order-details">
+
+                        <div class="col-md-2">
+                            <img src="@detail.products.productImages.FirstOrDefault()?.ImageUrl" alt="Product Image">
+                        </div>
+                        <div class="col-md-7">
+                            <h2>@detail.products.ProductName</h2>
+                            @{
+                                if (detail.ProductStatus != SD.statusDelivered)
+                                {
+                                    <div class="status">Order Status: @detail.ProductStatus</div>
+                                }
+                                else
+                                {
+                                    <div class="status">
+                                        Order Status: @detail.ProductStatus🎉
+                                    </div>
+
+
+                                }
+                            }
+                            @{
+                                if (detail.ProductStatus != SD.statusCancelled)
+                                {
+                                    if (detail.ProductPaymentStatus == SD.PaymentStatusApproved)
+                                    {
+                                        <div class="status">Paid</div>
+
+
+                                    }
+                                    else if (detail.ProductPaymentStatus == SD.PaymentStatusPending && order.PaymentType != "cash")
+                                    {
+                                        <div class="status">Not Paid</div>
+                                    }
+                                    else if (order.PaymentType == "cash" && detail.ProductPaymentStatus == SD.PaymentStatusPending)
+                                    {
+                                        <div class="status">Cash On Delivery</div>
+                                    }
+                                }
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            @{
+                                if (detail.ProductStatus == SD.statusDelivered)
+                                {
+                                    <p class="btn btn-warning">Write Product Review</p>
+                                    <a asp-area="User" asp-controller="Home" asp-action="Single" asp-route-id="@detail.products.Id" class="btn btn-info text-center" style="margin-top:10px">Buy Again</a>
+                                    if (detail.IsReturned != true)
+                                    {
+                                        if (detail.ReturnPolicyValid)
+                                        {
+                                            <a asp-area="User" asp-controller="Order" asp-action="Return" asp-route-productId="@detail.products.Id" asp-route-orderHeaderId="@order.Id" asp-route-orderDetailsId="@detail.Id" class="btn btn-info text-center" style="margin-top:10px"><i class="fa-solid fa-right-left"></i> Return</a>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-success">Product Returned</p>
+                                            <p class="text-success">Refund Done</p>
+
+
+                                        }
+
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    if (detail.ProductStatus != SD.statusCancelled && !detail.IsReturned)
+                                    {
+                                        <a class="btn btn-primary" asp-area="User" asp-controller="Order" asp-action="CancelSingleOrder" asp-route-id="@detail.Id">Cancel Order</a>
+                                    }
+                                    else if (detail.ProductStatus == SD.statusCancelled)
+                                    {
+                                        <p class="text-success">Product Cancelled</p>
+                                    }
+                                    else if (detail.IsReturned)
+                                    {
+                                        <p class="text-success">Product Returned</p>
+
+                                    }
+
+                                }
+                            }
+                        </div>
+
+                    </div>
+                }
+            }
+      
+        </div>
+    }
+}
+else
+{
+    <div class="no-orders">
+        <h1 class="NoOrder">You haven't placed any orders yet!</h1>
+        <img src="https://cdn.dribbble.com/users/154378/screenshots/4496348/media/61d5c79ce0729fdb982073956da24cac.png?resize=400x300&vertical=center" alt="No orders placed">
+        <div>
+            <a href="@Url.Action("Index", "Home", new { area = "User" })">Shop Now!</a>
+        </div>
+    </div>
+}

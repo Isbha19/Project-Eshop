@@ -1,0 +1,146 @@
+﻿@model IEnumerable<Wishlist>
+<style>
+    .wishlist-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start; /* Align items to the start of the container horizontally */
+      margin:30px;
+gap:50px;    }
+
+    .wishlist-item {
+        width: 250px; /* Reduced width for each card */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 20px; /* Add margin at the bottom to create space between cards */
+        position: relative; /* For absolute positioning of the remove button */
+        display: flex; /* Make items inside the container flexible */
+        flex-direction: column; /* Align items in a column */
+        align-items: center; /* Center align items */
+    }
+
+        .wishlist-item .card-img-top {
+            width: 100%;
+            height: 200px; /* Maintain aspect ratio */
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .wishlist-item .card-body {
+            padding: 10px; /* Reduced padding */
+            text-align: center; /* Center align text */
+            flex-grow: 1; /* Allow the card body to grow vertically */
+            display: flex; /* Make action buttons flexible */
+            flex-direction: column; /* Align buttons in a column */
+            justify-content: space-between; /* Space out buttons */
+        }
+
+        .wishlist-item .card-title {
+            font-size: 16px; /* Reduced font size */
+            margin-bottom: 5px; /* Reduced margin */
+        }
+
+        .wishlist-item .card-text {
+            color: #666;
+            font-size: 14px; /* Reduced font size */
+        }
+
+    .remove-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ddd; /* Gray background */
+        border: none;
+        color: #555; /* Dark gray text color */
+        font-size: 20px; /* Reduced font size */
+        width: 30px;
+        height: 30px;
+        border-radius: 50%; /* Circle shape */
+        display: flex; /* Center the cross icon */
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+        .remove-btn:hover {
+            background-color: #bbb; /* Darker gray background on hover */
+        }
+
+    .add-to-cart-btn {
+        background-color: #6c757d; /* Grayish button */
+        color: #fff; /* White text color */
+        border: none;
+        border-radius: 15px; /* Rounded corners */
+        padding: 5px 15px; /* Reduced padding */
+        text-transform: uppercase; /* Uppercase text */
+        font-weight: bold; /* Bold text */
+        text-decoration: none; /* Remove underline */
+        transition: background-color 0.3s ease; /* Smooth transition on hover */
+        font-size: 14px; /* Reduced font size */
+        margin-top: 20px; /* Reduced margin */
+    }
+
+        .add-to-cart-btn:hover {
+            background-color: #5a6268; /* Darker grayish background on hover */
+            text-decoration: none;
+        }
+</style>
+
+@if (Model.Any())
+{
+    <div class="wishlist-container">
+        @foreach (var item in Model)
+        {
+            <div class="wishlist-item card">
+                <a asp-area="User" asp-controller="Wishlist" asp-action="Delete" asp-route-id="@item.Id"> <span class="remove-btn">&times;</span></a> <!-- Cross round button -->
+                <img src="@item.product.productImages.FirstOrDefault()?.ImageUrl" class="card-img-top" alt="@item.product.ProductName">
+                <div class="card-body">
+                    <h5 class="card-title">@item.product.ProductName</h5>
+                    @{
+                        if (item.product.isOffered)
+                        {
+                            <p class="card-text"><strike>₹ @item.product.ProductPrice</strike> ₹ @item.product.OfferPrice - <span style="color:orangered">@item.product.OfferName</span> </p>
+
+                        }
+                        else
+                        {
+                            <p class="card-text">@item.product.ProductPrice</p>
+
+                        }
+                    }
+                    <p class="card-text">@item.product.ProductDescription</p>
+
+
+
+
+                  <div style="margin-top:10px;">
+                        <form asp-action="Cart" asp-controller="Cart" method="get" asp-route-id="@item.productId">
+                            <!-- Other form elements -->
+                            <input type="hidden" name="FromWishlist" value="true" />
+                            <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                        </form>
+
+
+
+                  </div>
+
+                    
+                </div>
+
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h1 style="font-size: 24px; margin-bottom: 10px;">YOUR WISHLIST IS EMPTY</h1>
+        <p style="font-size: 16px; color: #666;">
+            Add items that you like to your wishlist. Review them anytime and easily move them to the bag.
+        </p>
+        <img src="https://tse4.mm.bing.net/th?id=OIP.I1TJ_qQgwsDXRsrRKsUG0wHaEe&pid=Api&P=0&h=220" alt="order placed" />
+        <div>
+            <a href="@Url.Action("Index", "Home", new { area = "User" })" style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; margin-top: 20px;">Continue Shopping</a>
+        </div>
+    </div>
+}

@@ -1,0 +1,124 @@
+﻿@model IEnumerable<ShippingAdress>
+
+<div class="contact">
+        <div class="dreamcrub">
+            <ul class="breadcrumbs">
+                <li class="home">
+                    <a href="index.html" title="Go to Home Page">Home</a>&nbsp;
+                    <span>&gt;</span>
+                </li>
+                <li class="women">
+                    Address
+                </li>
+            </ul>
+            <ul class="previous">
+                <li><a href="index.html">Back to Previous Page</a></li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="contact-form d-flex flex-column align-items-center">
+            <div class="contact-info">
+                <h3>Select Address</h3>
+            </div>
+
+            @if (Model.Any())
+            {
+                <form id="addressForm" asp-area="User" asp-action="ChangeAddress" asp-controller="Cart" method="post">
+                    @foreach (var item in Model)
+                    {
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="radio" name="selectedAddress" value="@item.Id" id="@("address_" + item.Id)">
+                            <label class="form-check-label" for="@("address_" + item.Id)">
+                                <div class="address-info">
+                                    <span>@item.Name</span>
+                                    <span>@item.Address</span>
+                                    <span>@item.City</span>
+                                    <span>@item.District</span>
+                                    <span>@item.State</span>
+                                    <p>@item.Phone</p>
+
+                                </div>
+                            </label>
+                        </div>
+                    }
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            }
+            else
+            {
+                <div class="text-center mt-5">
+                    <h1 class="text-danger">No Address Found!</h1>
+                    <p class="lead">It seems you haven't added any addresses yet.</p>
+                </div>
+            }
+
+            <div class="text-center mt-5">
+                <a asp-action="Create" asp-area="User" asp-controller="Address" class="btn btn-success add-button">Add New Address</a>
+            </div>
+        </div>
+    </div>
+
+
+
+<style>
+    .contact {
+        background-color: #f9f9f9;
+        padding: 50px 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .breadcrumbs {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .breadcrumbs li {
+            display: inline;
+            font-size: 14px;
+            color: #666;
+        }
+
+    .previous {
+        float: right;
+    }
+
+    .contact-form {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-info h3 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .form-check-input {
+        margin-top: 5px;
+        margin-right: 10px;
+    }
+
+    .form-check-label {
+        display: inline-block;
+        vertical-align: top;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .address-info {
+        display: block;
+        margin-left: 30px;
+    }
+
+    .add-button {
+        margin-top: 30px;
+    }
+</style>

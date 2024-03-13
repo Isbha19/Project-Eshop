@@ -1,0 +1,74 @@
+﻿@model OrderViewModel
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+
+<style>
+    
+    .outer-div {
+        margin-bottom: 20px;
+    }
+
+    .inner-div {
+        border: 1px solid #ccc;
+        padding: 20px;
+    }
+
+    .price-details {
+        max-width: 400px;
+        margin: auto;
+    }
+
+    .payment-option {
+        margin-bottom: 10px;
+    }
+
+        .payment-option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+    .button-container {
+        text-align: center;
+    }
+
+   
+</style>
+
+
+<div class="outer-div">
+    <div class="inner-div price-details">
+        Total Price : ₹@HttpContextAccessor.HttpContext.Session.GetString("ParamTotal")
+        </div>
+        </div>
+<div class="outer-div">
+    <div class="inner-div price-details">
+
+        <h3>Choose Payment Mode</h3>
+        <hr />
+        <form id="orderForm" asp-area="User" asp-action="ChoosePayment" asp-controller="Cart"  method="post" >
+            
+
+
+            <div class="payment-option">
+                <input asp-for="@Model.orderHeader.PaymentType" type="radio" value="card" id="cardPayment">
+                <label asp-for="@Model.orderHeader.PaymentType" for="cardPayment">Card Payment</label>
+            </div>
+            <div class="payment-option">
+                <input asp-for="@Model.orderHeader.PaymentType" type="radio" value="cash" id="cashOnDelivery">
+                <label asp-for="@Model.orderHeader.PaymentType" for="cashOnDelivery">Cash on Delivery</label>
+            </div>
+            <div class="payment-option">
+                <input asp-for="@Model.orderHeader.PaymentType" type="radio" value="wallet" id="walletPayment">
+                <label asp-for="@Model.orderHeader.PaymentType" for="walletPayment" class="wallet-label">
+                    <span class="payment-label">Wallet&nbsp&nbsp&nbsp-&nbsp</span>
+                    <span class="wallet-balance">Balance: @HttpContextAccessor.HttpContext.Session.GetString("WalletBalance") </span>
+                </label>
+            </div>
+
+
+            <div class="button-container">
+                <button type="submit" class="btn btn-danger btn-block" style="margin-top:30px;">Place Order</button>
+            </div>
+        </form>
+    </div>
+</div>

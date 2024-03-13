@@ -1,0 +1,269 @@
+﻿@model List<Product>
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<style>
+	.search-container {
+		display: flex;
+		align-items: center; /* Align items vertically */
+		max-width: 350px; /* Reduced max-width */
+		margin: 0 auto;
+		margin-bottom: 20px;
+	}
+
+	#search-input {
+		flex: 1;
+		padding: 8px; /* Reduced padding */
+		border: 1px solid #ccc;
+		border-radius: 3px 0 0 3px; /* Reduced border radius */
+		font-size: 14px; /* Reduced font size */
+	}
+
+	#search-button {
+		background-color: #ccc;
+		color: #fff;
+		border: none;
+		border-radius: 0 3px 3px 0; /* Reduced border radius */
+		padding: 8px 15px; /* Reduced padding */
+		cursor: pointer;
+		font-size: 14px; /* Reduced font size */
+	}
+
+		#search-button:hover {
+			background-color: #999;
+		}
+
+	.sort {
+		display: flex;
+		align-items: center; /* Align items vertically */
+		margin-bottom: 20px;
+	}
+
+		.sort label {
+			margin-right: 10px;
+			font-size: 14px; /* Reduced font size */
+		}
+
+	#sorting {
+		padding: 8px;
+		border: 1px solid #ccc;
+		border-radius: 3px;
+		font-size: 14px; /* Reduced font size */
+	}
+
+		#sorting:focus {
+			outline: none;
+			border-color: #007bff;
+		}
+
+		#sorting option {
+			color: #000;
+		}
+
+			#sorting option[disabled] {
+				color: #999;
+			}
+
+			#sorting option[selected] {
+				font-weight: bold;
+			}
+
+	.sort img {
+		margin-left: 5px;
+		vertical-align: middle;
+	}
+
+	.cbp-vm-image img:hover{
+		height:205px;
+	}
+
+</style>
+
+<div>
+
+		<div style="padding:4em;" class="new-products">
+			<div class="new-product-top">
+				<ul class="product-top-list">
+					<li><a asp-action="Index">Home</a>&nbsp;<span>&gt;</span></li>
+
+				<li><span class="act">@HttpContextAccessor.HttpContext.Session.GetString("CategoryName")</span>&nbsp;</li>
+				</ul>
+				<p class="back"><a asp-action="Index" asp-controller="Home">Back to Previous</a></p>
+				<div class="clearfix"></div>
+			</div>
+			<div class="mens-toolbar">
+				<div class="sort">
+					<div class="sort-by">
+						<label>Sort By</label>
+						<select id="sorting">
+							<option selected disabled>
+								--select filer--
+							</option>
+							<option value="price_Asc">
+								Price:Low to High
+							</option>
+							<option value="price_desc">
+								Price:High to Low
+							</option>
+							<option value="popularity">
+								Popularity
+							</option>
+							<option value="AvgRating">
+								Average Ratings
+							</option>
+							<option value="Featured">
+								Featured
+							</option>
+							<option value="NewArrivals">
+								New Arrivals
+							</option>
+							<option value="aToZ">
+								aA-zZ
+							</option>
+							<option value="zToA">
+								Zz-Aa
+							</option>
+						</select>
+						<a href=""><img src="images/arrow2.gif" alt="" class="v-middle"></a>
+					</div>
+					
+				</div>
+				
+
+				
+				<div class="clearfix"></div>
+			</div>
+			<div id="cbp-vm" class="cbp-vm-switcher FilteredPart cbp-vm-view-grid">
+				
+				<div class="pages">
+					<div class="limiter visible-desktop">
+						<div class="search-container">
+							<form asp-action="CategoryProducts" asp-area="User" asp-controller="Home">
+								<input type="text" id="search-input" placeholder="Search for products..." name="searchString">
+								<button type="submit" id="search-button">Search</button>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<ul>
+					
+					
+					@{
+						if (Model.Any())
+						{
+						
+						foreach(var item in Model)
+						{
+							<li>
+								
+								<a class="cbp-vm-image" asp-controller="Home" asp-action="Single" asp-route-id="@item.Id">
+				<div class="simpleCart_shelfItem">
+					<div class="view view-first">
+						<div class="inner_content clearfix">
+							<div class="product_image">
+						<img src="@item.productImages[0].ImageUrl" height="200px"  alt="img" />
+								
+								<div class="product_container">
+									<div class="cart-left">
+										<p class="title">@item.ProductName</p>
+									</div>
+														@{
+															if (item.isOffered)
+															{
+																<div class="pricey"><span class="item_price"><strike>₹ @item.ProductPrice</strike> ₹ @item.OfferPrice - <span style="color:orangered">@item.OfferName</span> </span></div>
+
+															}
+															else
+															{
+																<div class="pricey"><span class="item_price">@item.ProductPrice</span></div>
+
+															}
+														}
+
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					</div>
+			</a>
+			<div class="cbp-vm-details">
+				@item.ProductDescription
+			</div>
+									@if (item.StockLeft > 0)
+									{
+										<a asp-area="User" asp-action="Cart" asp-controller="Cart" asp-route-id="@item.Id" class="cbp-vm-icon cbp-vm-add item_add">Add to cart</a>
+
+									}
+									else
+									{
+										<div style=" border: 1px solid #ccc;padding: 5px;margin-top: 20px; color: #999;">
+											<span class="text-muted">Product Out of Stock</span>
+										</div>
+									}
+								</li>
+								}
+						}
+
+						else
+						{
+							<h2 style="color: red; font-size: 24px;">No products found</h2>
+						}
+					}
+						
+		</ul>
+				</div>
+<script src="js/cbpViewModeSwitch.js" type="text/javascript"></script>
+<script src="js/classie.js" type="text/javascript"></script>
+			</div>
+<div class="clearfix"></div>
+			</div>
+<div class="clearfix"></div>
+   </div>
+
+
+<script>
+
+
+	$(document).ready(function () {
+		// Event listener for change in dropdown selection
+		$("select#sorting").change(function () {
+			console.log("filter event triggered");
+			// Function to extract the last number from URL
+			function getLastNumberFromUrl(url) {
+				var segments = url.split('/');
+				var lastSegment = segments.pop();
+				var lastNumber = parseInt(lastSegment);
+				return isNaN(lastNumber) ? null : lastNumber;
+			}
+			
+			// Get the category ID from the URL
+			var url = window.location.href;
+			var categoryId = getLastNumberFromUrl(url);
+			console.log(categoryId);
+
+			var Sort = $(this).val(); // Get the new status from the selected option
+			// AJAX request to update the status
+			$.ajax({
+				url: '/User/Home/CategoryProducts',
+				type: 'GET',
+				data: {
+					sort: Sort,
+					Id: categoryId
+				},
+			success: function (response) {
+					console.log(response);
+					
+						$('.new-products .cbp-vm-switcher').html($(response).find('.cbp-vm-switcher').html());
+					
+				},
+				error: function (xhr, status, error) {
+					console.error(xhr.responseText);
+				}
+			});
+		});
+	});
+
+
+
+</script>

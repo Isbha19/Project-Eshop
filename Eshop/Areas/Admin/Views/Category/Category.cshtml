@@ -1,0 +1,75 @@
+﻿
+ @model IEnumerable<Category>
+<section id="main-content">
+    <section class="wrapper">
+        <div class="table-agile-info">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+
+                    <div class="col-md-6 text-left">
+                        CATEGORIES
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a class="btn btn-info" asp-area="Admin" asp-controller="Category" asp-action="Upsert" asp-route-id="">Create Category</a>
+
+                    </div>
+
+
+                </div>
+                <div>
+                    <table class="table" ui-jq="footable" ui-options='{
+        "paging": {
+          "enabled": true
+        },
+        "filtering": {
+          "enabled": true
+        },
+        "sorting": {
+          "enabled": true
+        }}'>
+                        <thead>
+                            <tr>
+                                <th data-breakpoints="xs">ID</th>
+                                <th>Category</th>
+                                <th>Category Description</th>
+                                <th>Category Image</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr data-expanded="true">
+                                    <td>@item.Id</td>
+                                    <td class="col-md-2">@item.CategoryName</td>
+                                    <td class="col-md-4">@item.CategoryDescription</td>
+                                    <td class="col-md-2"><img src="@item.ImageUrl" alt="image" style="height:100px;width:100px"/></td>
+
+                                    <td>
+                                        <div role="group">
+                                            <a class="btn btn-primary" asp-area="Admin" asp-controller="Category" asp-action="Upsert" asp-route-id="@item.Id">Edit</a>
+                                            <a class="btn btn-info " asp-area="Admin" asp-controller="Category" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                            <a class="btn btn-danger " asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- footer -->
+    <div class="footer">
+        <div class="wthree-copyright">
+            <p>© 2017 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+        </div>
+    </div>
+    <!-- / footer -->
+</section>
+
+<!--main content end-->
+    </section>

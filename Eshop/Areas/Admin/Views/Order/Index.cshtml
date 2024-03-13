@@ -1,0 +1,142 @@
+﻿ @model IEnumerable<OrderHeader>
+ @using Eshop.Utility
+<section id="main-content">
+    <section class="wrapper">
+        <div class="table-agile-info">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+
+                    <div class="col-md-6 text-left">
+                        ORDERS
+                    </div>
+              
+
+
+                </div>
+                <div>
+
+
+                    <table class="table" ui-jq="footable" ui-options='{
+            "paging": {
+              "enabled": true
+            },
+            "filtering": {
+              "enabled": true
+            },
+            "sorting": {
+              "enabled": true
+            }}'>
+                        <thead>
+                            <tr>
+                                <th>Order Id</th>
+                                <th>User Name</th>
+                                <th>Order Date</th>
+                                <th>Order Status</th>
+                                <th>Payment Status</th>
+                                <th>Payment Mode</th>
+                                <th>Total Price</th>
+                                <th>Address</th>
+
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                               
+                                <tr data-expanded="true">
+                                    <td>@item.Id</td>
+                                    <td>@item.applicationUser.Name</td>
+                                    <td>@item.OrderDate.ToShortDateString()</td>
+                                    <td>@item.OrderStatus</td>
+                                   @*  <td>
+                                    @{
+                                        if (item.OrderStatus !=SD.statusCancelled && item.OrderStatus!=SD.statusDelivered)
+                                        {
+                                            
+                                                <select asp-for="@item.OrderStatus" class="form-control" id="orderStatus_@item.Id">
+                                                   
+                                                    <option value=@SD.statusProcessing>@SD.statusProcessing</option>
+                                                    <option value=@SD.statusShipped>@SD.statusShipped</option>
+                                                    <option value=@SD.statusDelivered>@SD.statusDelivered</option>
+                                                </select>
+                                            
+                                        }
+                                        else if(item.OrderStatus==SD.statusCancelled)
+                                        {
+                                                <span class="text-muted">Cancelled</span>
+                                            }else if (item.OrderStatus == SD.statusDelivered)
+                                            {
+                                                <span class="text-muted">Order Delivered!</span>
+                                            }
+
+                                    }
+                                    </td> *@
+                                    <td>@item.PaymentStatus</td>
+                                    <td>@item.PaymentType</td>
+                                    <td>₹@item.OrderTotal.ToString("0.##")</td>
+                                    <td>@item.Address, @item.City, @item.State, @item.Pincode</td>
+
+                                    <td>
+                                        <div role="group">
+                                           
+
+                                          
+                                                    <a class="btn btn-warning" asp-action="ViewOrder" asp-route-id="@item.Id">View Order</a>
+                                              
+                                            
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- footer -->
+    <div class="footer">
+        <div class="wthree-copyright">
+            <p>© 2017 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+        </div>
+    </div>
+    <!-- / footer -->
+</section>
+
+<!--main content end-->
+    </section>
+    <script>
+        $(document).ready(function () {
+        console.log("Dropdown change event triggered");
+    // Event listener for change in dropdown selection
+    $("select[id^='orderStatus_']").change(function () {
+        var orderId = $(this).attr('id').replace('orderStatus_', ''); // Extract orderId from id attribute
+        var newStatus = $(this).val(); // Get the new status from the selected option
+
+        // AJAX request to update the status
+        $.ajax({
+            url: 'Order/UpdateOrderStatus',
+            type: 'POST',
+            data: { Id: orderId, newStatus: newStatus },
+            success: function (response) {
+                console.log(response);
+                // Optionally update UI if needed
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+
+
+
+    </script>

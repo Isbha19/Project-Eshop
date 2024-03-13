@@ -1,0 +1,13 @@
+﻿@model int
+<div class="text-center">
+    <h1 style="font-size: 24px; color: forestgreen; margin-bottom: 10px;">Order Successfully placed!</h1>
+    <p style="font-size: 16px; color: #666;">The order ID is: <span style="font-weight: bold;">@Model</span></p>
+    <img src="https://png.pngtree.com/png-vector/20220719/ourmid/pngtree-order-placed-abstract-concept-vector-illustration-png-image_6012572.png" alt="order placed"/>
+   <div> <a href="@Url.Action("Index", "Home", new { area = "User" })" style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; margin-top: 20px;">Continue Shopping</a>
+    </div>
+    <!-- Download Invoice Section -->
+    <div class="invoice-download-section" style="margin-top: 30px;">
+        <p style="font-size: 16px; color: #333;">For your records, you can download your invoice below:</p>
+        <a asp-action="DownloadInvoice" asp-controller="Cart" asp-area="User" asp-route-orderId="@Model" style="text-decoration: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; background-color: #28a745; color: #fff; margin-top: 10px; margin-bottom:30px; display: inline-block;" download="invoice.pdf" class="btn btn-primary">Download Invoice <i class="fa-solid fa-download"></i></a>
+    </div>
+</div>

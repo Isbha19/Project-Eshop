@@ -1,0 +1,144 @@
+﻿@model OrderViewModel
+
+<style>
+    /* Basic styling for demonstration purposes */
+
+    .orderSum {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .order-summary {
+        border: 1px solid #ccc;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+        .order-summary h2 {
+            margin-top: 0;
+        }
+
+    .product-details {
+        margin-bottom: 20px;
+    }
+
+        .product-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .product-details th,
+        .product-details td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+    .price-details {
+        margin-bottom: 20px;
+    }
+
+        .price-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .price-details th,
+        .price-details td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+    .payment-type {
+        margin-bottom: 20px;
+    }
+
+    .place-order-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+</style>
+
+    <div class="orderSum">
+        <div class="order-summary">
+            <h2 class="text-center">Order Summary</h2>
+            <div class="product-details">
+                <h3>Product Details</h3>
+                <table>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                @{
+                    foreach(var product in Model.shoppingCarts)
+                    {
+                        <tr>
+                            <td>@product.products.ProductName</td>
+                            <td>@product.Count</td>
+                            @{
+
+                                if (product.products.isOffered)
+                                {
+
+                                    <td>₹@product.CartItemOfferPrice</td>
+
+                                }
+
+                                else if (product.CouponApplied)
+                                {
+
+                                    <td>₹@product.CouponDiscountPrice</td>
+                                }
+                                else
+                                {
+                                    <td>₹@product.TotalPrice</td>
+
+                                }
+                            }
+                           
+                        </tr>
+                    }
+                }
+                    <!-- Add more rows for other products -->
+                </table>
+            </div>
+            <div class="price-details">
+                <h3>Price</h3>
+                <table>
+                  
+                    <tr>
+                    @{
+                        if (Model.ShipCharge > 0)
+                        {<tr>
+
+                            <th>Shipping Charge</th>
+                            <td>₹@SD.ShippingCharge</td>
+                            </tr>
+                        }
+                    }
+                    <tr>
+                        <th>Total</th>
+                <td>₹@Model.OrderTotal</td>
+                 
+                    </tr>
+                </table>
+            </div>
+      
+            
+
+
+
+
+         <a asp-action="ChoosePayment"  asp-route-paramTotal="@Model.OrderTotal" asp-route-walletBalance="@Model.walletHeader.Balance" class="btn btn-danger btn-block" style="margin-top:30px;">Continue</a>
+                   
+            </div>
+        </div>
+           
+        </div>
+    </div>

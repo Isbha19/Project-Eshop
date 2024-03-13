@@ -1,0 +1,205 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Eshop</title>
+	<link href="~/css/bootstrap.css" rel="stylesheet" />
+	<link href="~/css/component.css" rel="stylesheet" />
+	<link href="~/css/flexslider.css" rel="stylesheet" />
+	<link href="~/css/style.css" rel="stylesheet" />
+	<link href="~/fonts/glyphicons-halflings-regular.eot" rel="stylesheet" />
+	<link href="~/fonts/glyphicons-halflings-regular.ttf" rel="stylesheet" />
+	<link href="~/fonts/glyphicons-halflings-regular.woff" rel="stylesheet" />
+	<link href="~/fonts/glyphicons-halflings-regular.woff2" rel="stylesheet" />
+	<link href="~/fonts/lato-regular.ttf" rel="stylesheet" />
+	<link href="~/fonts/playfairdisplay-regular.ttf" rel="stylesheet" />
+	<script src="~/js/jquery.min.js"></script>
+	<script src="~/js/bootstrap-3.1.1.min.js"></script>
+	<script src="~/js/cbpviewmodeswitch.js"></script>
+	<script src="~/js/classie.js"></script>
+	<script src="~/js/imagezoom.js"></script>
+	<script src="~/js/jquery.flexisel.js"></script>
+	<script src="~/js/jquery.flexslider.js"></script>
+	<script src="~/js/responsiveslides.min.js"></script>
+	<script src="~/js/responsive-tabs.js"></script>
+	<script src="~/js/simplecart.min.js"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+</head>
+
+<body>
+	<!-- header-section-starts -->
+	<div class="header">
+		<div class="header-top-strip">
+			<div class="container">
+				<div class="header-top-left">
+					<ul>
+						@{
+							if (User.IsInRole(SD.Role_Admin))
+							{
+								<li><a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-danger">Dashboard</a></li>
+
+							}
+						}
+						<partial name="_LoginPartial" />
+					</ul>
+				</div>
+				<div class="header-right">
+					<div class="cart box_1">
+						<a asp-area="User" asp-controller="Cart" asp-action="Cart">
+							<h3><img src="~/images/bag.png" alt=""> (@HttpContextAccessor.HttpContext.Session.GetString("CartCount"))</h3>
+						</a>
+						<a asp-area="User" asp-controller="Wishlist" asp-action="Index">
+							<h3><i style="font-size:13px;margin-left:6px;" class="fa-regular fa-heart"></i> </h3>
+						</a>
+						
+						
+						<div class="clearfix"> </div>
+					</div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+	<!-- header-section-ends -->
+	<div class="inner-banner">
+		<div class="container">
+			<div class="banner-top inner-head">
+				<nav class="navbar navbar-default" role="navigation">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<div class="logo">
+							<h1><a asp-area="User" asp-controller="Home" asp-action="Index"><span>E</span> -Shop</a></h1>
+						</div>
+					</div>
+					<!--/.navbar-header-->
+
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li><a asp-area="User" asp-action="Index" asp-controller="Home">Home</a></li>
+							<li><a asp-area="User" asp-action="About" asp-controller="Home">About</a></li>
+							<li><a asp-area="User" asp-action="Contact" asp-controller="Home">Contact</a></li>
+
+						
+							@if (User.Identity.IsAuthenticated)
+							{
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">PROFILE <i class="fa-solid fa-user"></i> <b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<div class="row">
+											<div class="col-sm-12 text-center">
+												<ul class="multi-column-dropdown">
+													<a asp-area="User" asp-controller="User" asp-action="UserProfile" style="text-decoration:none"><h6>YOUR PROFILE</h6></a>
+													<li><a asp-area="User" asp-controller="Order" asp-action="UserOrders">Orders</a></li>
+													<li><a asp-area="User" asp-controller="Wallet" asp-action="Index">Wallet</a></li>
+
+													<li><a asp-area="User" asp-controller="Wishlist" asp-action="Index">Wishlist</a></li>
+
+													<li><a asp-area="User" asp-controller="Address" asp-action="Index">Saved Addresses</a></li>
+													<li><a asp-area="Identity" asp-action="Manage" asp-controller="Account">Edit Profile</a></li>
+													
+
+													<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+
+													<li>
+														<button type="submit" style=" background: none;border: none;">
+															Logout
+														</button>
+													</li>
+
+													</form>
+												
+												</ul>
+											</div>
+
+
+											<div class="clearfix"></div>
+										</div>
+									</ul>
+								</li>
+								
+							}
+
+
+						</ul>
+					</div>
+					<!--/.navbar-collapse-->
+				</nav>
+				<!--/.navbar-->
+			</div>
+		</div>
+	</div>
+    <div>
+        @RenderBody()
+		<partial name="_Notification.cshtml" />
+    </div>
+	<!-- content-section-ends-here -->
+	<div class="news-letter">
+		<div class="container">
+			<div class="join">
+				<h6>JOIN OUR MAILING LIST</h6>
+				<div class="sub-left-right">
+					<form>
+						<input type="text" value="Enter Your Email Here" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Enter Your Email Here';}" />
+						<input type="submit" value="SUBSCRIBE" />
+					</form>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+	<div class="footer">
+		<div class="container">
+			<div class="footer_top">
+				<div class="span_of_4">
+					<div class="col-md-3 span1_of_4">
+						<h4>Shop</h4>
+						@await Component.InvokeAsync("CategoryList")
+						<vc:CategoryList></vc:CategoryList>
+
+					</div>
+					
+					<div class="col-md-3 span1_of_4">
+						<h4>account</h4>
+						<ul class="f_nav">
+							<li><a href="account.html">login</a></li>
+							<li><a href="register.html">create an account</a></li>
+							<li><a href="#">create wishlist</a></li>
+							<li><a href="checkout.html">my shopping bag</a></li>
+							<li><a href="#">brands</a></li>
+							<li><a href="#">create wishlist</a></li>
+						</ul>
+					</div>
+					<div class="col-md-6 span1_of_4">
+						<h4>Our Physical Store</h4>
+						<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6632.248000703498!2d151.265683!3d-33.7832959!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b12abc7edcbeb07%3A0x5017d681632bfc0!2sManly+Vale+NSW+2093%2C+Australia!5e0!3m2!1sen!2sin!4v1433329298259" style="border:0"></iframe>
+
+					</div>
+
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		
+			<div class="copyright text-center">
+				<p>© 2024 Eshop. All Rights Reserved | Designed by  Isbha Khalid</a></p>
+			</div>
+		</div>
+	</div>
+
+
+		@RenderSection("Scripts", required: false)
+	
+</body>
+</html>

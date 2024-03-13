@@ -1,0 +1,110 @@
+﻿@model Product
+
+
+<section id="main-content">
+	<section class="wrapper">
+	<div class="form-w3layouts">
+        <!-- page start-->
+        <!-- page start-->
+        <div class="row">
+            <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                           Product Details
+                        </header>
+                        <div class="panel-body">
+                            <div class="position-center">
+
+                            
+
+                                    <hr />
+                                    <dl class="dl-horizontal">
+                                        <dt class="text-muted">
+                                            @Html.DisplayNameFor(model => model.ProductName)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.ProductName)
+                                        </dd>
+                                        <dt class="text-muted">
+                                            @Html.DisplayNameFor(model => model.ProductDescription)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.ProductDescription)
+                                        </dd>
+                                    <dt class="text-muted">
+                                        @Html.DisplayNameFor(model => model.category.CategoryName)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.category.CategoryName)
+                                    </dd>
+                                    <dt class="text-muted">
+                                        @Html.DisplayNameFor(model => model.Quantity)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Quantity)
+                                    </dd>
+                                    <dt class="text-muted">
+                                        @Html.DisplayNameFor(model => model.StockLeft)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.StockLeft)
+                                    </dd>
+                                    <dt class="text-muted">
+                                        @Html.DisplayNameFor(model => model.ProductPrice)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.ProductPrice)
+                                    </dd>
+                                    
+                                    <dt class="text-muted">
+                                        @Html.DisplayNameFor(model => model.colors.Color)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.colors.Color)
+                                    </dd>
+                                    <dt class="text-muted">
+                                        @Html.DisplayNameFor(model => model.productImages)
+                                    </dt>
+                                    <dd>
+                                        <div class="d-flex flex-wrap">
+                                            @foreach (var img in @Model.productImages)
+                                            {
+
+                                                    <img src="@img.ImageUrl" width="100" height="100" data-id="103">
+                                                
+                                            }
+                                        </div>
+                                    </dd>
+                                   
+                                   
+                                           
+
+
+                                       
+                                  
+                                   
+                                <div class="text-center mt-3"><a class="btn btn-primary" asp-action="Product">Back to List</a></div>
+
+                                
+                            </div>
+
+                        </div>
+                    </section>
+
+            </div>
+        
+        </div>
+       
+
+
+        <!-- page end-->
+        </div>
+</section>
+ <!-- footer -->
+		  <div class="footer">
+			<div class="wthree-copyright">
+			  <p>© 2017 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+			</div>
+		  </div>
+  <!-- / footer -->
+</section>

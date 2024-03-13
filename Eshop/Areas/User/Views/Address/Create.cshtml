@@ -1,0 +1,83 @@
+﻿@model ShippingAdress
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Add New Address</h2>
+
+    <form asp-area="User" asp-controller="Address" asp-action="Create" method="post">
+        <input asp-for="UserId" hidden/>
+        <div class="form-group">
+            <label asp-for="Name">Name</label>
+            <input asp-for="Name" type="text" class="form-control" id="inputName" placeholder="Enter your name" >
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Phone">Phone</label>
+            <input asp-for="Phone" class="form-control" id="inputStreet" placeholder="Enter Phone Number" >
+            <span asp-validation-for="Phone" class="text-danger"></span>
+
+        </div>
+        <div class="form-group">
+            <label asp-for="Address">Address</label>
+            <textarea asp-for="Address" class="form-control" id="inputStreet" placeholder="Enter Address" rows="4" ></textarea>
+            <span asp-validation-for="Address" class="text-danger"></span>
+
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label asp-for="City">City</label>
+                <input asp-for="City" class="form-control" id="inputCity" placeholder="Enter city" >
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-4">
+                <label asp-for="District">District</label>
+                <input asp-for="District" class="form-control" id="inputCity" placeholder="Enter District" >
+                <span asp-validation-for="District" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-2">
+                <label asp-for="State">State</label>
+                <input asp-for="State" class="form-control" id="inputState" placeholder="Enter state" >
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-2">
+                <label asp-for="PinCode">Pin code</label>
+                <input asp-for="PinCode" class="form-control" id="inputZip" placeholder="Enter pin code" >
+                <span asp-validation-for="PinCode" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-check mt-3">
+            <input asp-for="saveAddress" class="form-check-input default-radio" type="radio" value="home">
+            <label asp-for="saveAddress" class="form-check-label">
+                Home
+            </label>
+        </div>
+
+        <div class="form-check mt-3">
+            <input asp-for="saveAddress" class="form-check-input default-radio" type="radio" value="work">
+            <label asp-for="saveAddress" class="form-check-label">
+                Work
+            </label>
+        </div>
+        <span asp-validation-for="saveAddress"></span>
+        <div class="form-check mt-3">
+            <input asp-for="IsDefault" class="form-check-input" type="checkbox" />
+            <label asp-for="IsDefault" class="form-check-label">
+                Default Address
+            </label>
+        </div>
+        <span asp-validation-for="IsDefault" class="text-danger"></span>
+
+       <span asp-validation-summary="All"></span>
+        <!-- Add other address fields as needed -->
+
+        <button type="submit" class="btn btn-primary">Save Address</button>
+    </form>
+</div> 
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+
+    }
+}

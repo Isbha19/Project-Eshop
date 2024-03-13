@@ -1,0 +1,597 @@
+﻿@model OrderViewModel
+
+<style>
+	li {
+		list-style: none;
+	}
+	#coupon-codes-section {
+		display: none;
+	}
+
+	.coupon-container {
+		margin-top: 20px;
+		padding: 20px;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		background-color: #f9f9f9;
+	}
+
+	.coupon-input {
+		width: 200px;
+		padding: 10px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+	}
+
+	.apply-coupon-button {
+		padding: 10px 20px;
+		background-color: #007bff;
+		color: #fff;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+
+		.apply-coupon-button:hover {
+			background-color: #0056b3;
+		}
+
+	.outer-div {
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+		padding: 10px; /* Adjust padding as needed */
+	}
+
+	.inner-div {
+		border: 1px solid #ddd; /* Border style */
+		border-radius: 5px; /* Border radius for rounded corners */
+		padding: 1px; /* Adjust padding as needed */
+	}
+
+	.price-details {
+		background-color: #f9f9f9;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		padding: 20px;
+		margin-top: 20px;
+	}
+
+		.price-details h3 {
+			color: #333;
+			margin-bottom: 10px;
+		}
+
+		.price-details hr {
+			border: 0;
+			border-top: 1px solid #ddd;
+			margin-bottom: 15px;
+		}
+
+		.price-details p {
+			margin-bottom: 10px;
+		}
+
+		.price-details button {
+			margin-top: 15px;
+		}
+
+
+		
+</style>
+	<!-- checkout -->
+<div class="cart-items shoppCart">
+	<div class="container shoppingCartSection">
+		<div class="dreamcrub">
+			<ul class="breadcrumbs">
+				<li class="home">
+					<a href="index.html" title="Go to Home Page">Home</a>&nbsp;
+					<span>&gt;</span>
+				</li>
+				<li class="women">
+					Cart
+				</li>
+			</ul>
+			<ul class="previous">
+				<li><a href="index.html">Back to Previous Page</a></li>
+			</ul>
+			<div class="clearfix"></div>
+		</div>
+	
+		@{
+			if (Model.shoppingCarts.Any())
+			{
+					<div class="container">
+						<div class="row">
+							<div class="col-md-6 ">
+								<partial name="_Notification.cshtml"/>
+								<div class="outer-div">
+									<div class="inner-div">
+										<h2>MY SHOPPING BAG (@Model.shoppingCarts.Count())</h2>
+										@{
+										foreach (var item in @Model.shoppingCarts)
+										{
+													<div class="cart-gd">
+
+														<div class="cart-sec simpleCart_shelfItem">
+															<div class="cart-item cyc">
+																<img src="@item.products.productImages[0].ImageUrl" class="img-responsive" alt="">
+															</div>
+															<div class="cart-item-info">
+																<h3><a href="#"> @item.products.ProductName </a><span>Pickup time:</span></h3>
+
+																<ul class="qty">
+																	@{
+																if (item.products.StockLeft == 0)
+																{
+																				<li>
+																				<span class="text-muted">Product Out of Stock</span>
+																				</li>
+																}
+																else
+																{
+																				<!-- Minus Button -->
+																				<li>
+																					<a data-product-id="@item.productId" class="btn btn-primary minus btn">-</a>
+																					<!-- Plus Button -->
+																					<a data-product-id="@item.productId" class="btn btn-primary plus btn">+</a>
+																				</li>
+																				<!-- Count Dropdown -->
+																				<li>
+																					<button>Qty: @item.Count</button>
+																				</li>
+																	
+																}
+																	}
+																	<a asp-action="Delete" asp-controller="Cart" asp-area="User" asp-route-id="@item.productId" class="btn btn-danger">Delete</a>
+																			<div class="clearfix"></div>
+																</ul>
+
+																
+																		<div class="delivery">
+																	@{
+
+																if (item.products.isOffered)
+																{
+																				<p>
+																					Price : ₹ @item.products.ProductPrice x @item.Count = <strike>@item.TotalPrice</strike> @item.CartItemOfferPrice - <span style="color:orangered">@item.products.OfferName</span>
+																				</p>
+																}
+
+																else if (item.CouponApplied)
+																{
+																				<p>
+																					Price : ₹ @item.products.ProductPrice x @item.Count =<strike>₹@item.TotalPrice</strike> ₹@item.CouponDiscountPrice - Coupon Applied 🎊
+																				</p>
+
+																}
+																else
+																{
+																				<p>Price : ₹ @item.products.ProductPrice x @item.Count = ₹@item.TotalPrice</p>
+
+																}
+																	}
+																			<div class="clearfix"></div>
+																		</div>
+																	
+																
+															</div>
+															<div class="clearfix"></div>
+
+														</div>
+													</div>
+
+
+
+										}
+
+										}
+									</div>
+								</div>
+							</div>
+							@{
+							if (Model.stockTotal > 0)
+							{
+										<div class="col-md-6">
+											<div class="outer-div">
+												<div class="inner-div">
+													<h2>
+														Shipping Address
+													</h2>
+													@{
+
+												if (Model.ShippingAdresses.Any())
+												{
+													foreach (var item in Model.ShippingAdresses)
+													{
+														if (item.IsDefault)
+														{
+
+
+																		<div class="row">
+																			<div class="col-xs-8">
+																				<p>Deliver to: <b>@item.Name,@item.PinCode</b></p>
+																				<p>@item.Address, @item.City, @item.District, @item.State</p>
+																			</div>
+																			<div class="col-xs-4 text-right">
+																				<a asp-area="User" asp-action="AddressChange" asp-controller="Address" class="btn btn-secondary">Change Address</a>
+																			</div>
+																		</div>
+
+														}
+													}
+												}
+												else
+												{
+																<div class="text-center">
+																	<h1 style="font-size: 20px; color: black; margin-bottom: 10px;">No Address Added</h1>
+																	<div>
+																		<a asp-area="User" asp-action="Create" asp-controller="Address" style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; margin-top: 20px;">Add Address</a>
+																	</div>
+																</div>
+												}
+													}
+												</div>
+												<h5 class="text-center">Shipping charges are applicable for orders under Rs 300.</h5>
+											</div>
+
+											@{
+										if (Model.offered == false)
+										{
+														<div class="outer-div">
+															<div class="inner-div">
+																<div class="coupon-container">
+																	<div class="row">
+																		<div class="col-md-8">
+																			<h3>Apply Coupon</h3>
+																			<form id="orderForm" asp-area="User" asp-controller="Coupon" asp-action="CouponApply" method="post">
+
+																				<input name="couponCode" class="coupon-input" placeholder="Enter coupon code">
+																				<span asp-asp-validation-for="couponCode" class="text-danger"></span>
+																				<button type="submit" class="apply-coupon-button">Apply</button>
+
+
+
+
+
+																			</form>												<button id="show-coupon-codes" class="btn btn-muted" data-toggle="modal" data-target="#couponCodesModal">Show Coupon Codes</button>
+
+																		</div>
+																		<div class="col-md-4">
+																			@{
+																	if (Model.shoppingCarts.First().CouponApplied)
+																	{
+																						<form id="removeCouponForm" method="post" action="@Url.Action("RemoveCoupon", "Coupon")">
+																							<button type="submit" class="btn btn-danger">Remove Coupon</button>
+																						</form>
+																	}
+																			}
+																		</div>
+																	</div>
+
+
+
+																</div>
+															</div>
+														</div>
+										}
+											}
+											<div class="modal fade" id="couponCodesModal" tabindex="-1" aria-labelledby="couponCodesModalLabel" aria-hidden="true">
+												<div class="modal-dialog">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="couponCodesModalLabel">Coupon Codes</h5>
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<ul class="list-group">
+															
+																@{
+															foreach(var coupon in Model.coupons)
+															{
+																if (Model.FilteredCoupon.Count() > 0)
+																{
+																	if (Model.user.isRefferalFlag)
+																	{
+																		if (coupon.isActive)
+																		{
+																						<li>
+																							@coupon.Code - @coupon.Percentage.ToString("0.##") % Off on your Order
+																							<button class="btn btn-link copy-btn" data-coupon="@coupon.Code">
+																								<i class="fa-solid fa-copy"></i>
+																							</button>
+																						</li>
+																		}
+																	}
+																	else
+																	{
+																		if (coupon.isActive && !coupon.isReferral)
+																		{
+																						<li>
+																							@coupon.Code - @coupon.Percentage.ToString("0.##") % Off on your Order
+																							<button class="btn btn-link copy-btn" data-coupon="@coupon.Code">
+																								<i class="fa-solid fa-copy"></i>
+																							</button>
+																						</li>
+																		}
+																	}
+																}
+																else
+																{
+																				<li>No Coupons Found!</li>
+																}
+
+															}
+															}
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+
+
+											<div class="outer-div">
+												<div class="inner-div price-details">
+													<div class="price-info">
+														<h3>Price Details</h3>
+														<hr />
+														<div class="row">
+															<div class="col-xs-6">
+																<p>Total MRP:</p>
+															</div>
+															<div class="col-xs-6 text-right">
+																<p>₹ @Model.OriginalPrice</p>
+															</div>
+														</div>
+													</div>
+													<div class="shipping-info">
+														@{
+													if (Model.SavedPrice > 0)
+													{
+																	<div class="row">
+																		<div class="col-xs-6">
+																			<p>Saved:</p>
+																		</div>
+																		<div class="col-xs-6 text-right">
+																			<p>₹@Model.SavedPrice.ToString("0.##")</p>
+																		</div>
+																	</div>
+													}
+														}
+
+
+														<hr />
+														<div class="row">
+															<div class="col-xs-6">
+																<p>Shipping Fee:</p>
+															</div>
+															@if (Model.ShipCharge > 0)
+													{
+																<div class="col-xs-6 text-right">
+																	<p>₹@Model.ShipCharge</p>
+																</div>
+													}
+													else
+													{
+																<div class="col-xs-6 text-right">
+																	<p>FREE</p>
+																</div>
+													}
+														</div>
+													
+														
+
+														<div class="row">
+															<div class="col-xs-6">
+																<p>Total Amount:</p>
+															</div>
+															<div class="col-xs-6 text-right">
+																
+																	
+																		<p>₹ @Model.OrderTotal</p>
+																	
+																
+																
+															</div>
+														</div>
+													</div>
+													
+
+													<div class="clearfix"></div>
+
+												</div>
+											</div>
+											<div class="outer-div">
+												<div class="inner-div price-details">
+													
+														@*<h3>Choose Payment Mode</h3>
+												<hr />
+											<form id="orderForm" asp-area="User" asp-action="Cart" asp-controller="Cart" method="post">
+												
+												
+
+													<div class="payment-option">
+													<input asp-for="@Model.orderHeader.PaymentType" type="radio" value="card" id="cardPayment">
+														<label asp-for="@Model.orderHeader.PaymentType" for="cardPayment">Card Payment</label>
+													</div>
+													<div class="payment-option">
+													<input asp-for="@Model.orderHeader.PaymentType" type="radio" value="cash" id="cashOnDelivery">
+													<label asp-for="@Model.orderHeader.PaymentType" for="cashOnDelivery">Cash on Delivery</label>
+													</div>
+												<div class="payment-option">
+													<input asp-for="@Model.orderHeader.PaymentType" type="radio" value="wallet" id="walletPayment">
+													<label asp-for="@Model.orderHeader.PaymentType" for="walletPayment" class="wallet-label">
+														<span class="payment-label">Wallet&nbsp&nbsp&nbsp-&nbsp&nbsp&nbsp</span>
+														<span class="wallet-balance">Balance: ₹@Model.walletHeader.Balance</span>
+													</label>
+												</div>
+
+											
+												<div class="button-container">
+													<button type="submit" class="btn btn-danger btn-block">Proceed to Checkout</button>
+												</div>
+											</form>*@
+
+													<div class="button-container">
+														<form id="orderForm" asp-action="OrderSummary" asp-area="User" asp-controller="Cart" method="get">
+															<input type="hidden" id="selectedCouponCode" name="selectedCouponCode" value="">
+															<button type="submit" class="btn btn-danger btn-block">Proceed to Checkout</button>
+
+														</form>
+
+													</div>
+												</div>
+											</div>
+										</div>
+							}
+							else
+							{
+										<div class="text-center">
+											<h1 style="font-size: 24px; color:brown ; margin-bottom: 10px;">Select Items that are Stock!</h1>
+											<img src="https://png.pngtree.com/png-vector/20220719/ourmid/pngtree-order-placed-abstract-concept-vector-illustration-png-image_6012572.png" alt="order placed" />
+											<div>
+												<a href="@Url.Action("Index", "Home", new { area = "User" })" style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; margin-top: 20px;">Continue Shopping</a>
+											</div>
+										</div>
+							}
+							}
+							
+						</div>
+					</div>
+			}
+			else
+			{
+					<div class="text-center mt-5">
+						<h1 class="text-danger">Hey It feels so light!</h1>
+						<p class="lead">There is nothing in your cart, Let's Add some items.</p>
+						<a asp-asp-area="User" asp-action="Index" asp-controller="Home" class="btn btn-primary">Add new Item</a>
+
+					</div>
+			}
+		}
+	</div>
+</div>
+
+<script>
+	// Function to copy coupon code to clipboard
+	function copyCouponCode() {
+		var couponCode = this.dataset.coupon;
+		navigator.clipboard.writeText(couponCode)
+			.then(function () {
+				alert("Coupon code copied to clipboard: " + couponCode);
+			})
+			.catch(function (error) {
+				console.error("Failed to copy coupon code: ", error);
+			});
+	}
+
+	// Function to handle form submission
+	function handleFormSubmission(event) {
+		event.preventDefault();
+		var couponCode = document.querySelector('#orderForm input[name="couponCode"]').value;
+		localStorage.setItem('selectedCouponCode', couponCode);
+		this.submit();
+	}
+
+	// Function to handle remove coupon form submission
+	function handleRemoveCouponFormSubmission(event) {
+		event.preventDefault();
+		localStorage.removeItem('selectedCouponCode');
+		// Additional clearing if needed
+		// localStorage.clear();
+		this.submit();
+	}
+
+	// Function to apply coupon
+	function applyCoupon(couponCode) {
+		$.ajax({
+			url: '/User/Coupon/CouponApply',
+			type: 'POST',
+			data: { couponCode: couponCode },
+			success: function (response) {
+				$('.shoppCart .shoppingCartSection').html($(response).find('.shoppingCartSection').html());
+			},
+			error: function (xhr, status, error) {
+				console.error('Error applying coupon:', error);
+			}
+		});
+	}
+
+	// Event listener for showing coupon codes modal
+	document.getElementById("show-coupon-codes").addEventListener("click", function () {
+		$('#couponCodesModal').modal('show');
+	});
+
+	// Event listener for copying coupon code
+	document.addEventListener("DOMContentLoaded", function () {
+		document.querySelectorAll(".copy-btn").forEach(function (button) {
+			button.addEventListener("click", copyCouponCode);
+		});
+	});
+
+	// Event listener for order form submission
+	document.getElementById('orderForm').addEventListener('submit', handleFormSubmission);
+
+	// Event listener for remove coupon form submission
+	var removeCouponForm = document.getElementById('removeCouponForm');
+	if (removeCouponForm) {
+		removeCouponForm.addEventListener('submit', handleRemoveCouponFormSubmission);
+	}
+
+	// Event listener for plus button click
+	$(document).on('click', '.plus', function () {
+		var productId = $(this).data('product-id');
+		$.ajax({
+			url: '/User/Cart/Plus',
+			type: 'POST',
+			data: { Id: productId },
+			success: function (response) {
+				$('.shoppCart .shoppingCartSection').html($(response).find('.shoppingCartSection').html());
+				var savedCouponCode = localStorage.getItem('selectedCouponCode');
+				if (savedCouponCode) {
+					applyCoupon(savedCouponCode);
+				}
+			},
+			error: function (xhr, status, error) {
+				console.error('Error incrementing quantity:', error);
+			}
+		});
+	});
+
+	// Event listener for minus button click
+	$(document).on('click', '.minus', function () {
+		var productId = $(this).data('product-id');
+		$.ajax({
+			url: '/User/Cart/Minus',
+			type: 'POST',
+			data: { Id: productId },
+			success: function (response) {
+				$('.shoppCart .shoppingCartSection').html($(response).find('.shoppingCartSection').html());
+				var savedCouponCode = localStorage.getItem('selectedCouponCode');
+				if (savedCouponCode) {
+					applyCoupon(savedCouponCode);
+				}
+			},
+			error: function (xhr, status, error) {
+				console.error('Error decrementing quantity:', error);
+			}
+		});
+	});
+
+	window.onload = function () {
+		var savedCouponCode = localStorage.getItem('selectedCouponCode');
+
+		if (@Model.shoppingCarts.Count() === 0) {
+			// If the cart is empty, clear the coupon code from local storage
+			localStorage.removeItem('selectedCouponCode');
+		}
+		if (savedCouponCode != null) {
+			document.getElementById('selectedCouponCode').value = savedCouponCode;
+		} else {
+			// If no coupon code is found in local storage or it's empty, clear the input field
+			document.getElementById('selectedCouponCode').value = '';
+		}
+		console.log(document.getElementById('selectedCouponCode').value);
+	};
+
+</script>

@@ -1,0 +1,828 @@
+﻿@model List<SalesReport>
+
+
+<!--main content start--><style>
+							 /* Custom CSS for styling select inputs */
+							 .filters select {
+								 width: 70%;
+								 padding: 8px;
+								 border: 1px solid #ced4da; /* Add border */
+								 border-radius: 4px; /* Add border-radius */
+								 transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* Add transition for smooth effect */
+							 }
+
+							 .filters label {
+								 margin-top: 8px;
+								 font-size: 15px;
+							 }
+
+							 #filters select {
+								 width: 90%;
+								 padding: 5px;
+								 border: 1px solid #ced4da; /* Add border */
+								 border-radius: 4px; /* Add border-radius */
+								 transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* Add transition for smooth effect */
+							 }
+							 #filters label{
+								 margin-top:8px;
+								 font-size:15px;
+							 }
+								 /* Style when the select input is focused */
+								 .filters select:focus {
+									 border-color: #80bdff; /* Change border color on focus */
+									 outline: 0; /* Remove default focus outline */
+									 box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Add box shadow on focus */
+								 }
+
+							 /* Custom CSS for styling */
+							 .filters {
+								 padding: 20px;
+								 border-radius: 5px;
+							 }
+
+								 .filters label {
+									 font-weight: bold;
+								 }
+
+								 .filters select {
+									 width: 100%;
+								 }
+
+							 /* Adjust spacing between filter elements */
+							 .mb-3 {
+								 margin-bottom: 15px;
+							 }
+
+							 /* Apply Filter button */
+							 .values{
+							 }
+							 table {
+								 width: 100%;
+								 border-collapse: collapse;
+								 margin-bottom: 20px;
+								 font-family: Arial, sans-serif; /* Set font family */
+							 }
+
+							 th, td {
+								 border: 1px solid #ddd;
+								 padding: 12px; /* Increase padding for better spacing */
+								 text-align: left;
+								 font-size:14px;
+							 }
+
+							 th {
+								 background-color: #f2f2f2;
+								 font-weight: bold; /* Make header cells bold */
+							 }
+
+							 tr:nth-child(even) {
+								 background-color: #f9f9f9; /* Alternate row colors for better readability */
+							 }
+
+							 tr:hover {
+								 background-color: #f2f2f2; /* Highlight row on hover */
+							 }
+
+							 /* Sales report section */
+							 .sales-report-section {
+								 background-color: #f9f9f9;
+								 padding: 15px;
+								 border-radius: 5px;
+								 margin-top: 20px;
+							 }
+
+							 /* Sales report filters */
+							 .sales-report-filters {
+								 margin-bottom: 20px;
+							 }
+
+								 .sales-report-filters h2 {
+									 font-size: 18px;
+									 margin-bottom: 8px;
+								 }
+								 .text-muted{
+									 font-size:14px;
+									 margin-right:10px;
+									 margin-left:10px;
+								 }
+
+							 /* Filters container */
+							 .filters {
+								 display: flex;
+								 flex-wrap: wrap;
+								 align-items: center;
+								 justify-content: space-between;
+							 }
+
+							 /* Custom date range */
+							 .custom-date-range {
+								 display: flex;
+								 align-items: center;
+							 }
+
+							 .filter-label {
+								 margin-right: 5px;
+								 font-size: 14px;
+							 }
+
+							 .filter-input {
+								 padding: 5px;
+								 border-radius: 3px;
+								 border: 1px solid #ccc;
+								 margin-right: 5px;
+								 font-size: 14px;
+							 }
+
+							 .filter-select {
+								 padding: 5px;
+								 border-radius: 3px;
+								 border: 1px solid #ccc;
+								 font-size: 14px;
+							 }
+
+							 /* Apply Filter and Generate Report buttons */
+							 .custom-btn {
+								 padding: 8px 8px;
+								 background-color: #f88379; /* Green */
+								 color: white;
+								 border: none;
+								 border-radius: 3px;
+								 cursor: pointer;
+								 transition: background-color 0.3s ease;
+								 font-size: 14px;
+								 margin-right:10px;
+								 margin-left:10px;
+							 }
+
+								 .custom-btn:hover {
+									 background-color: #fb607f; /* Darker green on hover */
+								 }
+
+							
+							 /* Target the date input */
+							 input[type="date"] {
+								 padding: 4px;
+								 border-radius: 3px;
+								 border: 1px solid #ccc;
+								 font-size: 14px;
+							 }
+
+								 /* Target the arrow button for selecting the date */
+								 input[type="date"]::-webkit-calendar-picker-indicator {
+									 /* Apply custom styles here */
+									 /* For example, change the color and size of the arrow */
+									 background-color: #f88379; /* Green */
+									 color: white;
+									 border: none;
+									 border-radius: 3px;
+									 padding: 8px;
+									 cursor: pointer;
+								 }
+
+								 input[type="date"]::-webkit-inner-spin-button {
+									 /* Hide the inner spin button (for browsers that support it) */
+									 display: none;
+								 }
+
+
+
+</style>
+
+
+<section id="main-content">
+	<section class="wrapper">
+		<!-- //market-->
+		<div class="market-updates">
+			
+			<div class="col-md-3 market-update-gd">
+				<div class="market-update-block clr-block-1">
+					<div class="col-md-4 market-update-right">
+						<i class="fa fa-users"></i>
+					</div>
+					<div class="col-md-8 market-update-left">
+						<h4>Total Users Registered</h4>
+						<h4>@ViewBag.UserCount</h4>
+						
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+			</div>
+			<div class="col-md-3 market-update-gd">
+				<div class="market-update-block clr-block-2">
+					<div class="col-md-4 market-update-right">
+						<i class="fa fa-usd"></i>
+					</div>
+					<div class="col-md-8 market-update-left">
+						<h4> Overall Sales count</h4>
+						<h4>@ViewBag.TotalSalesCount</h4>
+					
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+			</div>
+			<div class="col-md-3 market-update-gd">
+				<div class="market-update-block clr-block-3">
+					<div class="col-md-4 market-update-right">
+						<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+					</div>
+					<div class="col-md-8 market-update-left">
+						<h4>Overall Order Amount</h4>
+						<h4>₹@ViewBag.OverAllOrderAmount</h4>
+						
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+			</div>
+			<div class="col-md-3 market-update-gd">
+				<div class="market-update-block clr-block-4">
+					<div class="col-md-4 market-update-right">
+						<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+					</div>
+					<div class="col-md-8 market-update-left">
+						<h4>Overall Discounts</h4>
+						<h4>₹@ViewBag.OverAllDiscount</h4>
+						
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+			</div>
+
+			<div class="clearfix"> </div>
+		</div>
+	
+		
+
+		    <div class="sales-report-section">
+                <!-- Filters -->
+                <div class="sales-report-filters">
+                    <h2>Sales Report</h2>
+                    <div class="filters">
+                        <!-- Custom date range -->
+                       <form asp-action="Index" asp-controller="Home" asp-area="Admin">
+						<div class="custom-date-range">
+							<label class="text-muted">Custom Date Range:</label>
+							<input type="date" id="start-date" name="startDate">
+							<label class="text-muted">to</label>
+							<input type="date" id="end-date" name="endDate">
+							<button type="submit" id="apply-filter-btn" class="custom-btn">Apply Filter</button>
+						</div>
+						</form>
+					<a asp-action="Index" asp-area="Admin" asp-controller="Home" id="apply-filter-btn" class="custom-btn">
+						View Sales Report</a>
+					<button id="generate-report-btn" class="custom-btn">Generate Report</button>
+
+                        
+                        <!-- Day / Week / Month -->
+                   
+                    </div>
+                </div>
+                <!-- Sales report results -->
+			<!-- Sales report results -->
+			<div class="sales-report-results">
+				<table>
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Sales Count</th>
+							<th>Order Amount</th>
+							<th>Discount Amount</th>
+							<th>Amount Deducted for Discount</th>
+						</tr>
+					</thead>
+				<tbody>
+					@{
+						
+							foreach (var item in Model)
+							{
+
+								<tr>
+								<td>@item.Date.ToShortDateString()</td>
+								<td>@item.SalesCount.ToString("F0")</td>
+								<td> @(item.OrderAmount > 0?"₹" + @item.OrderAmount:@item.OrderAmount)</td>
+									<td>
+										@if (item?.OrderAmount == item?.DiscountAmount && item.OrderAmount!=0)
+										{
+											<span>No discount applied</span>
+										}
+										else
+										{
+											@(item?.DiscountAmount > 0 ? "₹" + item.DiscountAmount : item.DiscountAmount)
+										}
+									</td>
+									<td style="color: @(item.DiscountDeduction > 0 ? "red" : "black")">
+									@(item.DiscountDeduction > 0 ? "₹" + @item.DiscountDeduction : @item.DiscountDeduction)
+								</td>
+
+								</tr>
+							}
+						
+					}
+				</tbody>
+				</table>
+			</div>
+		</div>
+            </div>
+
+				<div class="row">
+			<div class="panel-body">
+				<div class="col-md-12 w3ls-graph">
+					<!--agileinfo-grap-->
+						<div class="agileinfo-grap">
+							<div class="agileits-box">
+								<header class="agileits-box-header clearfix">
+								<h3>Sales Chart 📊</h3>
+										<div class="toolbar">
+
+									<div class="filters">
+										<div class="form-group">
+											<label for="reportType">Select Report Type:</label>
+											<select id="reportType" class="form-control">
+												<option value="daily">Daily</option>
+												<option value="monthly">Monthly</option>
+												<option value="yearly">Yearly</option>
+											</select>
+										</div>
+										<div id="filters"></div>
+										<button id="generate-chart-btn" class="btn btn-primary">Generate Report</button>
+									</div>
+										</div>
+								</header>
+								<div class="agileits-box-body clearfix">
+								<div id="chartContainer" class="mt-4">
+									<canvas id="salesChart" width="400" height="200"></canvas>
+								</div>
+								</div>
+							</div>
+						</div>
+	<!--//agileinfo-grap-->
+
+				</div>
+			</div>
+		</div>
+
+
+		<div class="agileits-w3layouts-stats">
+			<div class="col-md-6 stats-info widget">
+				<div class="stats-info-agileits">
+					<div class="stats-title">
+						<h4 class="title">10 Best Selling Products</h4>
+					</div>
+					<div class="stats-body">
+						<ul class="list-unstyled">
+						
+							@foreach (var product in ViewBag.BestSellingProducts)
+							{
+								<li class="last">
+
+									@product.ProductName <span class="pull-right"><img src="@product.productImages[0].ImageUrl" class="rounded" height="50" width="50" /></span>
+
+								</li>
+								<hr/>
+							}
+
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 stats-info widget">
+				<div class="stats-info-agileits">
+					<div class="stats-title">
+						<h4 class="title">10 Best Selling Categories</h4>
+					</div>
+					<div class="stats-body">
+						<ul class="list-unstyled">
+
+							@foreach (var category in ViewBag.BestSellingCategories)
+							{
+								<li class="last">
+									@category.CategoryName <span class="pull-right"><img src="@category.ImageUrl" class="rounded" height="50" width="50" /></span>
+								
+								</li>
+								<hr/>
+							}
+
+						
+						</ul>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="clearfix"> </div>
+		</div>
+
+
+		<!-- //market-->
+	@* 	<div class="row">
+			<div class="panel-body">
+				<div class="col-md-12 w3ls-graph">
+					<!--agileinfo-grap-->
+					<div class="agileinfo-grap">
+						<div class="agileits-box">
+							<header class="agileits-box-header clearfix">
+								<h3>Visitor Statistics</h3>
+								<div class="toolbar">
+								</div>
+							</header>
+							<div class="agileits-box-body clearfix">
+								<div id="hero-area"></div>
+							</div>
+						</div>
+					</div>
+					<!--//agileinfo-grap-->
+
+				</div>
+			</div>
+		</div> *@
+		<div class="agil-info-calendar">
+			<!-- calendar -->
+			<div class="col-md-6 agile-calendar">
+				<div class="calendar-widget">
+					<div class="panel-heading ui-sortable-handle">
+						<span class="panel-icon">
+							<i class="fa fa-calendar-o"></i>
+						</span>
+						<span class="panel-title"> Calendar Widget</span>
+					</div>
+					<!-- grids -->
+					<div class="agile-calendar-grid">
+						<div class="page">
+
+							<div class="w3l-calendar-left">
+								<div class="calendar-heading">
+								</div>
+								<div class="monthly" id="mycalendar"></div>
+							</div>
+
+							<div class="clearfix"> </div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- //calendar -->
+			<div class="col-md-6 w3agile-notifications">
+				<div class="notifications">
+					<!--notification start-->
+
+					<header class="panel-heading">
+						Notification
+					</header>
+					<div class="notify-w3ls">
+						<div class="alert alert-info clearfix">
+							<span class="alert-icon"><i class="fa fa-envelope-o"></i></span>
+							<div class="notification-info">
+								<ul class="clearfix notification-meta">
+									<li class="pull-left notification-sender"><span><a href="#">Jonathan Smith</a></span> send you a mail </li>
+									<li class="pull-right notification-time">1 min ago</li>
+								</ul>
+								<p>
+									Urgent meeting for next proposal
+								</p>
+							</div>
+						</div>
+						<div class="alert alert-danger">
+							<span class="alert-icon"><i class="fa fa-facebook"></i></span>
+							<div class="notification-info">
+								<ul class="clearfix notification-meta">
+									<li class="pull-left notification-sender"><span><a href="#">Jonathan Smith</a></span> mentioned you in a post </li>
+									<li class="pull-right notification-time">7 Hours Ago</li>
+								</ul>
+								<p>
+									Very cool photo jack
+								</p>
+							</div>
+						</div>
+						<div class="alert alert-success ">
+							<span class="alert-icon"><i class="fa fa-comments-o"></i></span>
+							<div class="notification-info">
+								<ul class="clearfix notification-meta">
+									<li class="pull-left notification-sender">You have 5 message unread</li>
+									<li class="pull-right notification-time">1 min ago</li>
+								</ul>
+								<p>
+									<a href="#">Anjelina Mewlo, Jack Flip</a> and <a href="#">3 others</a>
+								</p>
+							</div>
+						</div>
+						<div class="alert alert-warning ">
+							<span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+							<div class="notification-info">
+								<ul class="clearfix notification-meta">
+									<li class="pull-left notification-sender">Domain Renew Deadline 7 days ahead</li>
+									<li class="pull-right notification-time">5 Days Ago</li>
+								</ul>
+								<p>
+									Next 5 July Thursday is the last day
+								</p>
+							</div>
+						</div>
+						<div class="alert alert-info clearfix">
+							<span class="alert-icon"><i class="fa fa-envelope-o"></i></span>
+							<div class="notification-info">
+								<ul class="clearfix notification-meta">
+									<li class="pull-left notification-sender"><span><a href="#">Jonathan Smith</a></span> send you a mail </li>
+									<li class="pull-right notification-time">1 min ago</li>
+								</ul>
+								<p>
+									Urgent meeting for next proposal
+								</p>
+							</div>
+						</div>
+
+					</div>
+
+					<!--notification end-->
+				</div>
+			</div>
+			<div class="clearfix"> </div>
+		</div>
+
+		<!-- tasks -->
+	@* 	<div class="agile-last-grids">
+			<div class="col-md-6 agile-last-left">
+				<div class="agile-last-grid">
+					<div class="area-grids-heading">
+						<h3>Monthly</h3>
+					</div>
+					<div id="graph7"></div>
+					<script>
+						// This crosses a DST boundary in the UK.
+						Morris.Area({
+							element: 'graph7',
+							data: [
+								{ x: '2013-03-30 22:00:00', y: 3, z: 3 },
+								{ x: '2013-03-31 00:00:00', y: 2, z: 0 },
+								{ x: '2013-03-31 02:00:00', y: 0, z: 2 },
+								{ x: '2013-03-31 04:00:00', y: 4, z: 4 }
+							],
+							xkey: 'x',
+							ykeys: ['y', 'z'],
+							labels: ['Y', 'Z']
+						});
+					</script>
+
+				</div>
+			</div>
+			<div class="col-md-6 agile-last-left agile-last-middle">
+				<div class="agile-last-grid">
+					<div class="area-grids-heading">
+						<h3>Daily</h3>
+					</div>
+					<div id="graph8"></div>
+					<script>
+						/* data stolen from http://howmanyleft.co.uk/vehicle/jaguar_'e'_type */
+						var day_data = [
+							{ "period": "2016-10-01", "sorned": 660 },
+							{ "period": "2016-09-30",  "sorned": 629 },
+							{ "period": "2016-09-29",  "sorned": 618 },
+							{ "period": "2016-09-20", "sorned": 661 },
+							{ "period": "2016-09-19", "sorned": 667 },
+							{ "period": "2016-09-18",  "sorned": 627 },
+							{ "period": "2016-09-17", "sorned": 660 },
+							{ "period": "2016-09-16",  "sorned": 676 },
+							{ "period": "2016-09-15",  "sorned": 656 },
+							{ "period": "2016-09-10", "sorned": 622 }
+						];
+						Morris.Bar({
+							element: 'graph8',
+							data: day_data,
+							xkey: 'period',
+							ykeys: [ 'sorned'],
+							labels: [ 'SORN'],
+							xLabelAngle: 60
+						});
+					</script>
+				</div>
+			</div>
+			<div class="col-md-6 agile-last-left agile-last-right">
+				<div class="agile-last-grid">
+					<div class="area-grids-heading">
+						<h3>Yearly</h3>
+					</div>
+					<div id="graph9"></div>
+					<script>
+						var day_data = [
+							{ "elapsed": "I", "value": 34 },
+							{ "elapsed": "II", "value": 24 },
+							{ "elapsed": "III", "value": 3 },
+							{ "elapsed": "IV", "value": 12 },
+							{ "elapsed": "V", "value": 13 },
+							{ "elapsed": "VI", "value": 22 },
+							{ "elapsed": "VII", "value": 5 },
+							{ "elapsed": "VIII", "value": 26 },
+							{ "elapsed": "IX", "value": 12 },
+							{ "elapsed": "X", "value": 19 }
+						];
+						Morris.Line({
+							element: 'graph9',
+							data: day_data,
+							xkey: 'elapsed',
+							ykeys: ['value'],
+							labels: ['value'],
+							parseTime: false
+						});
+					</script>
+
+				</div>
+			</div>
+			<div class="clearfix"> </div>
+		</div> *@
+		<!-- //tasks -->
+	
+	</section>
+	<!-- footer -->
+	<div class="footer">
+		<div class="wthree-copyright">
+			<p>© 2017 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+		</div>
+	</div>
+	<!-- / footer -->
+</section>
+<!--main content end-->
+</section>
+<script>
+	// Serialize the C# model into JSON
+	var reportData = @Html.Raw(Json.Serialize(Model));
+
+	document.getElementById("generate-report-btn").addEventListener("click", function () {
+		
+		// Generate CSV content for the report
+		var csvContent = "data:text/csv;charset=utf-8,";
+		var header = Object.keys(reportData[0]).filter(key => key !== "monthName" && key !== "year").join(","); // Exclude monthName and Year from header
+		console.log(header);
+		csvContent += header + "\n"; // Add the header row
+
+		reportData.forEach(row => {
+			var values = Object.keys(row).filter(key => key !== "monthName" && key !== "year").map(key => {
+				// Check if the value is a date
+				if (row[key] instanceof Date) { // Corrected line
+					// Format the date as yyyy-mm-dd
+					return row[key].toISOString().substring(0, 10);
+				}
+				if (key === "discountAmount" && row[key] === row["orderAmount"] && row["orderAmount"]!=0) {
+					return "No discount applied";
+				}
+				return row[key];
+			});
+			csvContent += values.join("\t\t\t,") + "\n";
+		});
+		console.log(csvContent);
+
+
+		// Create a hidden link element to trigger the download
+		var encodedUri = encodeURI(csvContent);
+		var link = document.createElement("a");
+		link.setAttribute("href", encodedUri);
+		link.setAttribute("download", "sales-report.csv");
+
+		// Append the link to the body and trigger the download
+		document.body.appendChild(link);
+		link.click();
+
+		// Remove the link from the body
+		document.body.removeChild(link);
+	});
+</script>
+<!-- JavaScript code for handling filter selection and chart generation -->
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const reportTypeSelect = document.getElementById("reportType");
+		const filtersContainer = document.getElementById("filters");
+		const chartContainer = document.getElementById("salesChart");
+
+		reportTypeSelect.value = "daily";
+		
+		const currentMonth = new Date().getMonth() + 1; // January is 0, so add 1
+		const currentYear = new Date().getFullYear();
+
+		// Create default filters for the current month and year
+		const defaultFilters = {
+			month: currentMonth,
+			year: currentYear
+		};
+
+		// Generate chart with default filters
+		generateChart(defaultFilters);
+		function generateChart(filters) {
+			fetch(`@Url.Action("GetSalesData", "Home")?type=${reportTypeSelect.value}&year=${filters.year}&month=${filters.month}`)
+				.then(response => response.json())
+				.then(data => {
+					renderChart(data);
+				})
+				.catch(error => console.error("Error fetching sales data:", error));
+		}
+	
+		const filterOptions = {
+			daily: ["Month", "Year"],
+			monthly: ["Year"],
+			yearly: []
+		};
+		function createFilters(options) {
+			filtersContainer.innerHTML = "";
+			options.forEach(option => {
+				const label = document.createElement("label");
+				label.textContent = `Select ${option}:`;
+
+				const select = document.createElement("select");
+				select.classList.add("filter");
+				select.dataset.filterType = option.toLowerCase();
+				if (option === "Month") {
+					const currentMonth = new Date().getMonth() + 1; // Adding 1 because getMonth() returns zero-based month index
+					for (let i = 1; i <= 12; i++) {
+						const monthOption = document.createElement("option");
+						monthOption.value = i;
+						monthOption.textContent = new Date(2000, i - 1).toLocaleString('default', { month: 'long' });
+						if (i === currentMonth) {
+							monthOption.selected = true;
+						}
+						select.appendChild(monthOption);
+					}
+				} else if (option === "Year") {
+					const currentYear = new Date().getFullYear();
+					for (let year = 2020; year <= currentYear; year++) {
+						const yearOption = document.createElement("option");
+						yearOption.value = year;
+						yearOption.textContent = year;
+						if (year === currentYear) {
+							yearOption.selected = true;
+						}
+						select.appendChild(yearOption);
+					}
+				}
+				filtersContainer.appendChild(label);
+				filtersContainer.appendChild(select);
+			});
+		}
+
+		createFilters(filterOptions[reportTypeSelect.value]);  
+
+		reportTypeSelect.addEventListener("change", function () {
+			const selectedReportType = this.value;
+			createFilters(filterOptions[selectedReportType]);
+		});
+
+		document.getElementById("generate-chart-btn").addEventListener("click", function () {
+			const reportType = reportTypeSelect.value;
+			const filters = {};
+			document.querySelectorAll(".filter").forEach(filter => {
+				const filterType = filter.dataset.filterType;
+				filters[filterType] = filter.value;
+			});
+
+			generateChart(filters);
+
+		});
+
+		function renderChart(data) {
+			let labels;
+			if (data[0].monthName != null) {
+				// If type is monthly, use month names as labels
+				labels = data.map(entry => entry.monthName);
+			} else if (data[0].year !== "0001-01-01T00:00:00") {
+				// If type is daily or monthly, use full date as labels
+				labels = data.map(entry => new Date(entry.year).getFullYear());
+			} else {
+				// If type is yearly, extract year from date as labels
+				labels = data.map(entry => entry.date);
+			}
+			
+			
+			const salesCountData = data.map(entry => entry.orderAmount);
+
+			const chartData = {
+				labels: labels,
+				datasets: [{
+					label: 'Sales Count',
+					data: salesCountData,
+					backgroundColor: 'rgba(54, 162, 235, 0.2)',
+					borderColor: 'rgba(54, 162, 235, 1)',
+					borderWidth: 1
+				}]
+			};
+
+			const chartOptions = {
+				scales: {
+					y: {
+						beginAtZero: true
+					}
+				}
+			};
+
+			// Remove previous chart if exists
+			if (window.salesChart instanceof Chart) {
+				// If it exists, destroy the previous chart
+				window.salesChart.destroy();
+			}
+
+			// Create a new chart
+			window.salesChart = new Chart(chartContainer, {
+				type: 'line',
+				data: chartData,
+				options: chartOptions
+				
+			});
+		}
+	});
+
+</script>

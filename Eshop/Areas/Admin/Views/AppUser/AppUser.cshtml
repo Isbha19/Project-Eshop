@@ -1,0 +1,94 @@
+﻿ @model IEnumerable<ApplicationUser>
+<section id="main-content">
+    <section class="wrapper">
+        <div class="table-agile-info">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+
+                    <div class="col-md-6 text-left">
+                        USERS
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a class="btn btn-info" asp-area="Admin" asp-controller="AppUser" asp-action="Create" >Create User</a>
+
+                    </div>
+
+
+                </div>
+                <div>
+               
+                
+                            <table class="table" ui-jq="footable" ui-options='{
+            "paging": {
+              "enabled": true
+            },
+            "filtering": {
+              "enabled": true
+            },
+            "sorting": {
+              "enabled": true
+            }}'>
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-3">ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                      
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                if (@item.Email == "Admin@gmail.com") 
+                                continue;
+                                <tr data-expanded="true">
+                                            <td class="col-md-3">@item.Id</td>
+                                            <td>@item.Name</td>
+                                            <td>@item.Email</td>
+                                            <td>@item.PhoneNumber</td>
+
+                                            <td>
+                                                <div role="group">
+                                                    <a class="btn btn-primary" asp-area="Admin" asp-controller="AppUser" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                                    <a class="btn btn-danger " asp-area="Admin" asp-controller="AppUser" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+
+                                                    @if (item.LockoutEnd.HasValue && item.LockoutEnd.Value > DateTime.Now)
+                                                    {
+                                                        <!-- User is currently blocked, show Unblock button -->
+                                                        <a class="btn btn-success" asp-area="Admin" asp-controller="AppUser" asp-action="UnBlock" asp-route-id="@item.Id">Unblock</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <!-- User is not blocked or expired, show Block button -->
+                                                        <a class="btn btn-danger" asp-area="Admin" asp-controller="AppUser" asp-action="Block" asp-route-id="@item.Id">Block</a>
+                                                    }
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        
+
+                  
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- footer -->
+    <div class="footer">
+        <div class="wthree-copyright">
+            <p>© 2017 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+        </div>
+    </div>
+    <!-- / footer -->
+</section>
+
+<!--main content end-->
+    </section>

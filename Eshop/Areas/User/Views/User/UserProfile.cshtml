@@ -1,0 +1,134 @@
+﻿@model ApplicationUser
+<style>
+    .Details {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .user-details {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+        .user-details label {
+            font-weight: bold;
+            flex: 1;
+            min-width: 150px; /* Adjust as needed */
+        }
+
+        .user-details p {
+            margin: 5px 0;
+            flex: 2;
+        }
+
+    .edit-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+    }
+
+        .edit-btn:hover {
+            background-color: #0056b3;
+        }
+</style>
+
+<div class="Details">
+    <h2>User Details</h2>
+    <div class="user-details">
+        <label for="username">Username:</label>
+        <p id="username">@Model.Name</p>
+    </div>
+    <div class="user-details">
+        <label for="email">Email:</label>
+        <p id="email">@Model.Email</p>
+    </div>
+    <div class="user-details">
+        <label for="MobileNumber">Gender:</label>
+        <p id="firstName">
+            @if (Model.Gender == null)
+            {
+                <text>-Not Added-</text>
+            }
+            else
+            {
+                @Model.Gender
+            }
+        </p>
+    </div>
+    <div class="user-details">
+        <label for="MobileNumber">Date of Birth:</label>
+        <p id="firstName">
+            @if (Model.DateOfBirth == DateTime.MinValue)
+            {
+                <text>-Not Added-</text>
+            }
+            else
+            {
+                @Model.DateOfBirth.ToShortDateString()
+            }
+            
+            </p>
+    </div>
+    <div class="user-details">
+        <label for="MobileNumber">Mobile Number:</label>
+          
+        <p id="firstName">
+                @if (Model.PhoneNumber == null)
+                {
+                    <text>-Not Added-</text>
+                }
+                else
+                {
+                    @Model.PhoneNumber
+                }
+        </p>
+    </div>
+    <div class="user-details">
+        <label for="Alternate">Alternate Mobile Number:</label>
+        <p id="firstName">
+            @if (Model.AlternatePhoneNum == null)
+            {
+                <text>-Not Added-</text>
+            }
+            else
+            {
+                @Model.AlternatePhoneNum
+            }
+        </p>
+    </div>
+   
+    <div class="user-details">
+        <label for="Location">Location:</label>
+        <p id="firstName">
+            @if (Model.Location == null)
+            {
+                <text>-Not Added-</text>
+            }
+            else
+            {
+                @Model.Location
+            }
+        </p>
+    </div>
+
+    <!-- Add more user details fields as needed -->
+    <a asp-area="User" asp-controller="User" asp-action="EditProfile"  class="edit-btn">Edit Details</a>
+</div>

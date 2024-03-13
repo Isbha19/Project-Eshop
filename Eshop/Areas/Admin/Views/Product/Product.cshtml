@@ -1,0 +1,98 @@
+﻿
+ @model IEnumerable<Product>
+<section id="main-content">
+    <section class="wrapper">
+        <div class="table-agile-info">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    
+                   
+                   
+                    <div class="col-md-6 text-left">
+                        PRODUCTS
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a class="btn btn-info" asp-area="Admin" asp-controller="Product" asp-action="Upsert" asp-route-id="">Create Product</a>
+
+                    </div>
+
+
+                </div>
+                <div>
+                    <table class="table" ui-jq="footable" ui-options='{
+        "paging": {
+          "enabled": true
+        },
+        "filtering": {
+          "enabled": true
+        },
+        "sorting": {
+          "enabled": true
+        }}'>
+                        <thead>
+                            <tr>
+                                <th data-breakpoints="xs">ID</th>
+                                <th>Product</th>
+                                
+                                <th>Product Price</th>
+                                <th>Product Quantity</th>
+                                <th>Stock Left</th>
+                                <th>Product Category</th>
+                                <th>Product color</th>
+                                <th>Product Image</th>                              
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr data-expanded="true">
+                                    <td >@item.Id</td>
+                                    <td class="col-md-1">@item.ProductName</td>
+                                    <td class="col-md-1"> INR @item.ProductPrice</td>
+                                    <td>@item.Quantity</td>
+                                   
+                                    <td>@item.StockLeft</td>
+                                    <td >@item.category.CategoryName</td>
+                                    <td class="col-md-1"><span class="dot" style="height:25px;width:25px;background-color:@item.colors?.Color;border-radius:50%;display: inline-block;"></td>
+                                    <td class="col-md-1">
+                                        @{
+                                            @if (@item.productImages.Count > 0)
+                                            {
+                                                <img src="@item.productImages[0].ImageUrl" alt="First Image" height="50" width="50" />
+                                            }
+                                            else
+                                            {
+                                                <p>No Images Added</p>
+                                            }
+                                        }
+                                    </td>
+
+
+                                    <td class="col-md-5">
+                                        <div role="group">
+                                            <a class="btn btn-primary" asp-area="Admin" asp-controller="Product" asp-action="Upsert" asp-route-id="@item.Id">Edit</a>
+                                            <a class="btn btn-info " asp-area="Admin" asp-controller="Product" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                            <a class="btn btn-danger " asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- footer -->
+    <div class="footer">
+        <div class="wthree-copyright">
+            <p>© 2017 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+        </div>
+    </div>
+    <!-- / footer -->
+</section>
+
+<!--main content end-->
+    </section>

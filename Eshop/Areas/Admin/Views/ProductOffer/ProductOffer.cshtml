@@ -1,0 +1,90 @@
+﻿
+ @model IEnumerable<ProductOffer>
+<section id="main-content">
+    <section class="wrapper">
+        <div class="table-agile-info">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+
+                    <div class="col-md-4 text-left">
+                       PRODUCT OFFERS
+                      
+                    </div>
+                    <div class="col-md-8 text-right">
+                        <a class="btn btn-info" asp-area="Admin" asp-controller="ProductOffer" asp-action="Upsert" asp-route-id="">Create Product Offer</a>
+
+                    </div>
+
+
+                </div>
+                <div>
+
+                        @{
+                            if (Model.Any())
+                            {
+                            <table class="table" ui-jq="footable" ui-options='{
+            "paging": {
+              "enabled": true
+            },
+            "filtering": {
+              "enabled": true
+            },
+            "sorting": {
+              "enabled": true
+            }}'>
+                                 <thead>
+                            <tr>
+                                <th data-breakpoints="xs">ID</th>
+                                <th>Product</th>
+                                <th>Offer Name</th>
+                                <th>OfferType</th>
+                                <th>Discount</th>
+                                
+
+                               
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr data-expanded="true">
+                                    <td>@item.Id</td>
+                                    <td>@item.product.ProductName</td>
+                                    <td>@item.offer.OfferName</td>
+                                            <td>@item.offer.offerType</td>
+
+                                    <td>@item.offer.Discount</td>
+                                          
+                                    <td>
+                                        <div role="group">
+                                            <a class="btn btn-danger " asp-area="Admin" asp-controller="ProductOffer" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                           
+                        </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>No offers found</p>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- footer -->
+    <div class="footer">
+        <div class="wthree-copyright">
+            <p>© 2017 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">W3layouts</a></p>
+        </div>
+    </div>
+    <!-- / footer -->
+</section>
+
+<!--main content end-->
+    </section>
